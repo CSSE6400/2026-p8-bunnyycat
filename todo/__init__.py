@@ -3,6 +3,7 @@ import boto3
 import watchtower, logging
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy 
+from .log_formatter import StructuredFormatter
 
 def create_app(config_overrides=None):
     logging.basicConfig(level=logging.INFO)
@@ -17,6 +18,7 @@ def create_app(config_overrides=None):
             log_group_name="taskoverflow",
             boto3_client=boto3.client("logs", region_name="us-east-1")
     )
+    handler.setFormatter(StructuredFormatter())
     app.logger.addHandler(handler)
     logging.getLogger().addHandler(handler)
     logging.getLogger('werkzeug').addHandler(handler)
